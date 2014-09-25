@@ -1,0 +1,36 @@
+<div class="board-list col-md-3">
+  
+  <h3>board list</h3>
+
+  <ul ng-repeat="board in boards" class="board-btn">
+    <li ng-click="selectBoard(board)" ng-dblclick="editBoard(board)">
+      <span ng-hide="board.editing">{{board.name}}</span>
+      <i class="fa fa-times" ng-click="removeBoard(board)"></i>
+      <i class="fa fa-pencil" ng-hide='board.editing' ng-click="editBoard(board)"></i>
+      <i class="fa fa-check" ng-show='board.editing' ng-click="doneEditing(board)"></i>
+      <form ng-submit="doneEditing(board)" ng-show="board.editing">
+        <input  maxlength='30'
+                ng-model="board.name" 
+                ng-blur="doneEditing(board)" 
+                ng-focus="board == editedBoard">
+        </input>
+      </form>
+    </label>
+  </ul>
+  <div class="add-board-btn" ng-click="addBoard(board)"><i class="fa fa-plus"></i>Add new board</div>
+</div>
+
+<div id="board" class="col-md-9" ng-dblclick='addNote($event)' >
+  <div  ng-repeat="note in selectedBoard.notes"
+        class="note"
+        ng-draggable="note"
+        style="left: {{note.x}}px; top: {{note.y}}px" >
+
+    <div class="header">
+      <i class="fa fa-times" ng-click="removeNote(note)"></i>
+    </div>
+    
+    <div class="content" my-content='note' ng-bind-html="note.content | unsafe">
+    </div>
+  </div>
+</div>
