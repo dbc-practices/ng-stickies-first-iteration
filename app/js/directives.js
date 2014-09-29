@@ -28,8 +28,8 @@ myAppDirectives.directive('ngDraggable', function($document) {
         
       // Bind mousedown event
         elem.on('mousedown', function(e) {
-          startX = e.clientX - elem[0].offsetLeft + inittialOffsetX;
-          startY = e.clientY - elem[0].offsetTop + initialOffsetY;
+          startX = e.clientX - elem[0].offsetLeft + inittialOffsetX - 15;
+          startY = e.clientY - elem[0].offsetTop + initialOffsetY - 15;
           $document.on('mousemove', mousemove);
           $document.on('mouseup', mouseup);
         });
@@ -75,7 +75,6 @@ myAppDirectives.directive('ngDraggable', function($document) {
 myAppDirectives.directive("myContent", function(){
   return {
     restrict: "A",
-    // require: 'ngModel',
     scope: { note: '=myContent' },
     link: function(scope, elem, attr) {
       elem.on('dblclick', function(e){
@@ -91,29 +90,31 @@ myAppDirectives.directive("myContent", function(){
       })
     }
   }
-})
+});
 
-// myAppDirectives.directive("contenteditable", function() {
-//     return {
-//       restrict: "AC",
-//       require: "^ngModel",
-//       link: function(scope, element, attrs) {
-
-//         function read() {
-//           ngModel.$setViewValue(element.html());
-//         };
-
-//         ngModel.$render = function() {
-//           element.html(ngModel.$viewValue || "");
-//         };
-
-//         element.bind("keyup change", function() {
-//           scope.$apply(read);
-//           board = scope.selectedBoard;
-//           indexOfSelectedNote = board.notes.indexOf(note);
-//           board.notes[indexOfSelectedNote].content = note.content;
-//         });
-//       }
-//     };
-//   });
-
+myAppDirectives.directive('modalDialog', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      show: '=show'
+    },
+    replace: true, // Replace with the template below
+    transclude: true, // we want to insert custom content inside the directive
+    link: function(scope, element, attrs) {
+      scope.dialogStyle = {};
+      if (attrs.width)
+        scope.dialogStyle.width = attrs.width;
+      if (attrs.height)
+        scope.dialogStyle.height = attrs.height;
+      scope.hideModal = function() {
+        scope.show = false;
+      };
+    },
+    template: " <div class='ng-modal' ng-show='show'>" +
+                  "<div class='ng-modal-overlay' ng-click='hideModal()'></div>" +
+                  "<div class='ng-modal-dialog' ng-style='dialogStyle'>" +
+                    "<div class='ng-modal-dialog-content' ng-transclude></div>" +
+                  "</div>" +
+                "</div>"
+  };
+});
